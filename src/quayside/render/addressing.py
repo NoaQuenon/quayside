@@ -14,7 +14,7 @@ class Addressing:
     link_subnets: dict[str, IPv4Network]
     gateway_ips: dict[str, IPv4Address]
     link_ips: dict[str, dict[str, IPv4Address]]
-    components_ips: dict[str, IPv4Address]
+    component_ips: dict[str, IPv4Address]
 
 
 # Basically our own little DHCP :)

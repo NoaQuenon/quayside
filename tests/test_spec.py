@@ -39,16 +39,16 @@ def test_override_parses_yaml():
     assert apply_override({}, "a.b=[1, 2]") == {"a": {"b": [1, 2]}}
 
 
-def test_smoke_loads(scenario_dir):
-    scn = load_scenario(scenario_dir / "smoke.yaml")
+def test_smoke_loads(scenarios_dir):
+    scn = load_scenario(scenarios_dir / "smoke.yaml")
 
     assert set(scn.sites) == {"factory", "edge", "cloud"}
     assert scn.links["edge-cloud"].rate == "100mbit"
     assert scn.site_of("probe-edge") == "edge"
 
 
-def test_extends_attribute_overrides(scenario_dir):
-    scn = load_scenario(scenario_dir / "smoke-degraded.yaml", ["links.factory-edge.latency=1s"])
+def test_extends_attribute_overrides(scenarios_dir):
+    scn = load_scenario(scenarios_dir / "smoke-degraded.yaml", ["links.factory-edge.latency=1s"])
 
     assert scn.name == "smoke-degraded"
     assert scn.links["edge-cloud"].latency == 80
