@@ -92,9 +92,7 @@ class Scenario(_Model):
         for kind in ("sites", "hosts", "links", "components"):
             for name in getattr(self, kind):
                 if not re.match(NAME_PATTERN, name):
-                    raise ValueError(
-                        f"{kind[:-1]} name {name} must match {NAME_PATTERN}"
-                    )
+                    raise ValueError(f"{kind[:-1]} name {name} must match {NAME_PATTERN}")
 
         reserved = {gateway_name(s) for s in self.sites} | {NETCTL_SERVICE}
 
@@ -126,23 +124,17 @@ class Scenario(_Model):
             pair = frozenset((link.a, link.b))
 
             if pair in pairs:
-                raise ValueError(
-                    f"links {pairs[pair]} and {name} connect the same sites"
-                )
+                raise ValueError(f"links {pairs[pair]} and {name} connect the same sites")
 
             pairs[pair] = name
 
         # Components
         for name, comp in self.components.items():
             if comp.host is not None and comp.host not in self.hosts:
-                raise ValueError(
-                    f"component {name} references unknown host {comp.host}"
-                )
+                raise ValueError(f"component {name} references unknown host {comp.host}")
 
             if comp.site is not None and comp.site not in self.sites:
-                raise ValueError(
-                    f"component {name} references unknown site {comp.site}"
-                )
+                raise ValueError(f"component {name} references unknown site {comp.site}")
 
         # Connected graph
         graph = self.site_graph()
@@ -185,7 +177,4 @@ def site_paths(graph: nx.Graph) -> dict[str, dict[str, list[str]]]:
             u, v, weight=graph.edges[u, v]["latency"] + 1e-6
         )  # Small value added to prevent pure 0 cost
 
-    return {
-        src: nx.single_source_dijkstra_path(weighted, src, weight="weight")
-        for src in sorted(graph)
-    }
+    return {src: nx.single_source_dijkstra_path(weighted, src, weight="weight") for src in sorted(graph)}

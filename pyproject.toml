@@ -10,6 +10,7 @@ requires-python = ">=3.14"
 dependencies = [
     "networkx>=3.7",
     "pydantic>=2.13.5",
+    "pyyaml>=6.0.3",
 ]
 
 [dependency-groups]
@@ -26,3 +27,9 @@ quayside = "quayside:main"
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF", "ASYNC"]

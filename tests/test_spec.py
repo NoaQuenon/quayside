@@ -1,7 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from quayside.spec.models import Scenario
+from quayside.spec import Scenario, load_scenario
+from quayside.spec.loader import apply_override, deep_merge
 from quayside.spec.units import parse_ms
 
 
@@ -13,28 +14,10 @@ def minimal(**extra):
         "components": {"c": {"image": "x", "site": "a"}},
     }
 
-    return merge(data, extra)
+    return deep_merge(data, extra)
 
 
-def merge(base: dict, patch: dict) -> dict:
-    merged = dict(base)
-
-    for key, value in patch.items():
-        if value is None:
-            merged.pop(key, None)
-
-        elif isinstance(value, dict) and isinstance(merged.get(key), dict):
-            merged[key] = merge(merged[key], value)
-
-        else:
-            merged[key] = value
-
-    return merged
-
-
-@pytest.mark.parametrize(
-    ("raw", "ms"), [("5ms", 5), ("1.5s", 1500), ("200us", 0.2), ("7", 7)]
-)
+@pytest.mark.parametrize(("raw", "ms"), [("5ms", 5), ("1.5s", 1500), ("200us", 0.2), ("7", 7)])
 def test_parse_ms(raw, ms):
     assert parse_ms(raw) == pytest.approx(ms)
 
@@ -43,6 +26,25 @@ def test_parse_ms(raw, ms):
 def test_parse_ms_rejects(raw):
     with pytest.raises(ValueError):
         parse_ms(raw)
+
+
+def test_deep_merge_null_deletes():
+    assert deep_merge({"a": {"b": 1, "c": 2}}, {"a": {"c": None, "d": 3}}) == {"a": {"b": 1, "d": 3}}
+
+
+def test_override_parses_yaml():
+    data = apply_override({"links": {"x": {"latency": 1}}}, "links.x.latency=20ms")
+
+    assert data == {"links": {"x": {"latency": "20ms"}}}
+    assert apply_override({}, "a.b=[1, 2]") == {"a": {"b": [1, 2]}}
+
+
+def test_circular_extends(tmp_path):
+    (tmp_path / "a.yaml").write_text("extends: b.yaml\n")
+    (tmp_path / "b.yaml").write_text("extends: a.yaml\n")
+
+    with pytest.raises(ValueError, match="circular"):
+        load_scenario(tmp_path / "a.yaml")
 
 
 @pytest.mark.parametrize(

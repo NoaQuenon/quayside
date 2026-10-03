@@ -6,9 +6,7 @@ from pydantic import BeforeValidator
 _DURATION = re.compile(r"^\s*(\d+(?:\.\d+)?)\s*(us|ms|s)?\s*$")
 _DURATION_SCALE = {"us": 1e-3, "ms": 1, "s": 1e3, None: 1}
 
-_RATE = re.compile(
-    r"^\d+(?:\.\d+)?(?:bit|kbit|mbit|gbit|bps|kbps|mbps|gbps)$", re.IGNORECASE
-)
+_RATE = re.compile(r"^\d+(?:\.\d+)?(?:bit|kbit|mbit|gbit|bps|kbps|mbps|gbps)$", re.IGNORECASE)
 _MEMORY = re.compile(r"^\d+(?:\.\d+)?[bkmg]?$", re.IGNORECASE)
 
 
@@ -18,9 +16,7 @@ def parse_ms(value: object) -> float:
     # I hate Python so much
     # For some reason True is considered a valid int or float, so it doesn't error out
     if isinstance(value, bool):
-        raise ValueError(
-            f"invalid duration {value}; expected e.g. '5ms', '1s', '200us'"
-        )
+        raise ValueError(f"invalid duration {value}; expected e.g. '5ms', '1s', '200us'")
 
     if isinstance(value, int | float):
         return float(value)
@@ -37,9 +33,7 @@ def check_rate(value: object) -> str:
     if isinstance(value, str) and _RATE.match(value):
         return value.lower()
 
-    raise ValueError(
-        f"invalid rate {value}; expected e.g. '100mbit', '1gbit', '500kbit'"
-    )
+    raise ValueError(f"invalid rate {value}; expected e.g. '100mbit', '1gbit', '500kbit'")
 
 
 def check_memory(value: object) -> str:
