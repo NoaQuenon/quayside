@@ -1,0 +1,50 @@
+name: smoke
+description: A small smoke test with a three-layer topology
+
+sites:
+  factory:
+    layer: factory
+
+  edge:
+    layer: edge
+
+  cloud:
+    layer: cloud
+
+hosts:
+  edge-server-1:
+    site: edge
+    cpus: 4
+    memory: 4g
+
+links:
+  factory-edge:
+    a: factory
+    b: edge
+    latency: 5ms
+    jitter: 0.5ms
+
+  edge-cloud:
+    a: edge
+    b: cloud
+    latency: 20ms
+    jitter: 2ms
+    rate: 100mbit
+
+# Labels starting with 'x-' are ignored, so that we can use anchors and stuff :)
+x-pinger: &pinger
+  image: alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6 # Including the hash for reproducibility
+  command: [sleep, infinity]
+
+components:
+  probe-factory:
+    <<: *pinger
+    site: factory
+
+  probe-edge:
+    <<: *pinger
+    site: edge
+
+  probe-cloud:
+    <<: *pinger
+    site: cloud
