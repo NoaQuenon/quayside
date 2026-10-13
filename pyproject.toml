@@ -1,0 +1,14 @@
+[project]
+name = "quayside"
+version = "0.1.0"
+description = "A reproducible Docker testbed for distributed IDS research on cloudified industrial control systems"
+readme = "README.md"
+authors = [
+    { name = "Noa Quenon", email = "noa.quenon@uclouvain.be" }
+]
+requires-python = ">=3.14"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
