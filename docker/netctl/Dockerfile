@@ -1,3 +1,6 @@
 FROM alpine:3.24.2@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
 RUN apk add --no-cache iproute2 iproute2-tc util-linux-misc tcpdump
-CMD ["sleep", "infinity"]
+
+COPY --chmod=755 logexec.sh /usr/local/bin/logexec
+
+CMD ["sh", "-c", "echo $$ > /run/main.pid && exec sleep infinity"]
