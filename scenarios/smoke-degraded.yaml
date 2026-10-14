@@ -1,0 +1,11 @@
+extends: smoke.yaml
+
+name: smoke-degraded
+description: A version of the smoke test scenario with a worse edge-cloud link
+
+links:
+  edge-cloud:
+    latency: 80ms
+    jitter: 15ms
+    loss: 1
+    rate: 10mbit
