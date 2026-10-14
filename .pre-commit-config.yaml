@@ -22,4 +22,5 @@ repos:
         entry: uv run mypy
         language: system
         types_or: [python, pyi]
+        pass_filenames: false
         require_serial: true
