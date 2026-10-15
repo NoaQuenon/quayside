@@ -18,6 +18,7 @@ class NetCtl:
 
     def run(self, target: Container, argv: list[str], check: bool = True) -> str:
         """Runs a command in `target`'s network namespace"""
+
         target.reload()
         pid = target.attrs["State"]["Pid"]
 
@@ -28,6 +29,7 @@ class NetCtl:
 
     def interface_for(self, target: Container, ip: IPv4Address) -> str:
         """Returns the name of the interface in `target` that carries `ip`"""
+
         out = self.run(target, ["ip", "-j", "-4", "addr", "show"])
 
         for iface in json.loads(out):
