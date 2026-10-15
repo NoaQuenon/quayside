@@ -19,6 +19,8 @@ DEFAULT_WORKDIR = Path(".quayside")
 
 
 class Testbed:
+    __test__ = False  # Otherwise pytest tries to collect it since it starts with test lol
+
     def __init__(self, scenario: Scenario, workdir: Path = DEFAULT_WORKDIR):
         self.dir = workdir / scenario.name
         self._docker: DockerClient | None = None

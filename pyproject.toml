@@ -39,6 +39,9 @@ files = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "integration: needs a running Docker daemon"
+]
 
 [tool.ruff]
 line-length = 110
