@@ -40,7 +40,7 @@ class NetCtl:
         raise NetCtlError(f"{target.name} has no interface with address {ip}")
 
     def _exec(self, argv: list[str], check: bool) -> str:
-        code, output = self.helper.exec_run(argv)
+        code, output = self.helper.exec_run(["logexec", *argv])
         assert isinstance(output, bytes)  # To satisfy mypy...
         text = output.decode(errors="replace")
 
