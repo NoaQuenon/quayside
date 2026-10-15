@@ -3,6 +3,7 @@ from ipaddress import IPv4Address, IPv4Network
 import pytest
 
 from quayside.render import build_plan
+from quayside.render.compose import render_compose
 from quayside.spec import Scenario, load_scenario
 
 
@@ -81,3 +82,26 @@ def test_routes_prefer_low_latency():
     to_c = next(r for r in plan.routes["a"] if r.destination == plan.addressing.site_subnets["c"])
 
     assert to_c.link == "ab"
+
+
+def test_compose_structure(smoke):
+    compose = render_compose(smoke)
+    services = compose["services"]
+
+    assert set(services) == {
+        "gw-cloud",
+        "gw-edge",
+        "gw-factory",
+        "netctl",
+        "probe-cloud",
+        "probe-edge",
+        "probe-factory",
+    }
+
+    assert set(services["gw-edge"]["networks"]) == {"site-edge", "link-edge-cloud", "link-factory-edge"}
+
+    assert services["probe-cloud"]["extra_hosts"]["probe-factory"] == "10.77.2.10"
+
+    bridges = [n["driver_opts"]["com.docker.network.bridge.name"] for n in compose["networks"].values()]
+    assert len(set(bridges)) == len(bridges)
+    assert all(len(b) <= 15 for b in bridges)  # Linux only supports bridge names up to 15 characters
