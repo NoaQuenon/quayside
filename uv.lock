@@ -1,9 +1,15 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 resolution-markers = [
     "python_full_version >= '3.15'",
     "python_full_version < '3.15'",
+]
+
+[manifest]
+members = [
+    "quayside",
+    "quayside-components",
 ]
 
 [[package]]
@@ -652,6 +658,7 @@ dependencies = [
     { name = "networkx" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "quayside-components" },
     { name = "typer" },
 ]
 
@@ -672,6 +679,7 @@ requires-dist = [
     { name = "networkx", specifier = ">=3.7" },
     { name = "pydantic", specifier = ">=2.14.1" },
     { name = "pyyaml", specifier = ">=6.0.3" },
+    { name = "quayside-components", editable = "package/quayside-components" },
     { name = "typer", specifier = ">=0.27.3" },
 ]
 
@@ -685,6 +693,17 @@ dev = [
     { name = "types-networkx", specifier = ">=3.6.1.20261006" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20260906" },
 ]
+
+[[package]]
+name = "quayside-components"
+version = "0.1.0"
+source = { editable = "package/quayside-components" }
+dependencies = [
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pydantic", specifier = ">=2.14.1" }]
 
 [[package]]
 name = "requests"

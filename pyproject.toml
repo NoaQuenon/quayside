@@ -12,6 +12,7 @@ dependencies = [
     "networkx>=3.7",
     "pydantic>=2.14.1",
     "pyyaml>=6.0.3",
+    "quayside-components",
     "typer>=0.27.3",
 ]
 
@@ -32,6 +33,12 @@ quayside = "quayside.cli:app"
 [build-system]
 requires = ["uv_build>=0.12.19,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv.workspace]
+members = ["package/*"]
+
+[tool.uv.sources]
+quayside-components = { workspace = true }
 
 [tool.mypy]
 strict = true
