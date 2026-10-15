@@ -4,7 +4,9 @@ import pytest
 
 from quayside.render import build_plan
 from quayside.render.compose import render_compose
+from quayside.runtime.netem import netem_command
 from quayside.spec import Scenario, load_scenario
+from quayside.spec.models import LinkSpec
 
 
 @pytest.fixture
@@ -105,3 +107,28 @@ def test_compose_structure(smoke):
     bridges = [n["driver_opts"]["com.docker.network.bridge.name"] for n in compose["networks"].values()]
     assert len(set(bridges)) == len(bridges)
     assert all(len(b) <= 15 for b in bridges)  # Linux only supports bridge names up to 15 characters
+
+
+def test_netem_command():
+    link = LinkSpec(a="x", b="y", latency="20ms", jitter="2ms", loss=0.5, rate="10mbit")
+
+    assert netem_command(link, "eth1") == [
+        "tc",
+        "qdisc",
+        "replace",
+        "dev",
+        "eth1",
+        "root",
+        "netem",
+        "delay",
+        "20.0ms",
+        "2.0ms",
+        "distribution",
+        "normal",
+        "loss",
+        "0.5%",
+        "rate",
+        "10mbit",
+        "limit",
+        "100000",
+    ]
