@@ -47,7 +47,7 @@ def render_compose(plan: Plan) -> dict[str, Any]:
         "image": NETCTL.tag,
         "pull_policy": "never",
         "init": True,
-        "priviledged": True,
+        "privileged": True,
         "pid": "host",
         "network_mode": "host",
         "labels": {LABEL_ROLE: "netctl"},
