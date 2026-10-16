@@ -12,7 +12,7 @@ from quayside_components.modbus.protocol import (
 )
 
 
-class ModbusError(ExceptionCode):
+class ModbusError(Exception):
     """Raised when a transport or protocol failure occurs and the connection has been closed"""
 
 
